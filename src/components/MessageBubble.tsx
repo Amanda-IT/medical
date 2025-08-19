@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { Message } from "../types/chat";
+import { ChatMessagePart, Message } from "../types/chat";
 import { Person, Android } from '@mui/icons-material';
 
 interface MessageBubbleProps {
@@ -11,7 +11,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
     <Box
       sx={{
         display: "flex",
-        justifyContent: message.sender === "user" ? "flex-end" : "flex-start",
+        justifyContent: message.role === "user" ? "flex-end" : "flex-start",
         marginBottom: "12px",
       }}
     >
@@ -20,15 +20,15 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
           maxWidth: "70%",
           padding: "8px 12px",
           borderRadius: "12px",
-          bgcolor: message.sender === "ai" ? "#E3F2FD" : "#BBDEFB",
+          bgcolor: message.role === "assistant" ? "#E3F2FD" : "#BBDEFB",
         }}
       >
-        {message.sender === 'user' ? (
+        {message.role === 'user' ? (
           <Person style={{ marginRight: '8px', color: '#1890ff' }} />
         ) : (
           <Android style={{ marginRight: '8px', color: '#52c41a' }} />
         )}
-        <Typography variant="body1">{message.text}</Typography>
+        <Typography variant="body1">{(message.parts[0] as ChatMessagePart).text}</Typography>
       </Box>
     </Box>
   );

@@ -10,9 +10,10 @@ import {
   Container,
 } from '@mui/material';
 import { LockOutlined as LockOutlinedIcon } from '@mui/icons-material';
+import { getLoginResponse } from '../services/loginService';
 
 interface LoginFormInputs {
-  username: string;
+  userName: string;
   password: string;
 }
 
@@ -20,18 +21,15 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
 
-  // 硬编码的用户名和密码
-  const HARDCODED_USERNAME = 'admin';
-  const HARDCODED_PASSWORD = '123456';
+  const onSubmit = async (data: LoginFormInputs) => {
+    var result = await getLoginResponse(data);
 
-  const onSubmit = (data: LoginFormInputs) => {
-    if (data.username === HARDCODED_USERNAME && data.password === HARDCODED_PASSWORD) {
-      // 模拟 token（实际项目中应从后台获取）
-      const token = 'mock-token-123';
-      localStorage.setItem('token', token); // 存储 token
+    if (result) {
+      console.log("navigate")
       navigate('/chat'); // 跳转到聊天页面
     } else {
-      alert('Oops, looks like the username or password is incorrect. Try again!');
+      console.error("login fail");
+      alert('Oops, looks like the userName or password is incorrect. Try again!');
     }
   };
 
@@ -58,9 +56,9 @@ const LoginPage = () => {
             fullWidth
             label="User Name"
             autoFocus
-            {...register('username', { required: 'Please insert user name' })}
-            error={!!errors.username}
-            helperText={errors.username?.message}
+            {...register('userName', { required: 'Please insert user name' })}
+            error={!!errors.userName}
+            helperText={errors.userName?.message}
           />
           <TextField
             margin="normal"
