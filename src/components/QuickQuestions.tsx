@@ -12,6 +12,7 @@ const QuickQuestions: React.FC<QuickQuestionsProps> = ({ onSend }) => {
 
   return (
     <Box sx={{ padding: "0 16px 12px", display: "flex", flexWrap: "wrap", gap: 1 }}>
+      examples: 
       {questions.map((text, index) => (
         <Button
           key={index}

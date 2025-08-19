@@ -1,9 +1,14 @@
 
-export interface ChatMessagePart {
-  text: string;
+// export interface TextMessage{
+//   text: string;
+// }
+export interface MessagePart {
+  text?: string;
+  functionCall?: FunctionCall
+  functionResponse?: FunctionResponse
 }
 
-export interface FunctionCallPart {
+export interface FunctionCall {
   name: string;
   args: {
     options: any[];
@@ -13,9 +18,14 @@ export interface FunctionCallPart {
 export interface Message {
   id: number;
   role: 'user' | 'assistant';
-  parts: (ChatMessagePart | FunctionCallPart)[];
+  parts: MessagePart[];
 }
 
 export interface ChatApiPayload {
   contents: Message[];
+}
+
+export interface FunctionResponse {
+  name: string;
+  response: string;
 }

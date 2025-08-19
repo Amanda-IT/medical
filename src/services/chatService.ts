@@ -1,8 +1,8 @@
-import { Message, ChatApiPayload, ChatMessagePart } from '../types/chat';
+import { Message, ChatApiPayload } from '../types/chat';
 
 import config from "../config";
 
-export const getChatResponse = async (history: Message[]): Promise<string> => {
+export const getChatResponse = async (history: Message[]): Promise<Message> => {
   try {
     const payload: ChatApiPayload = {
       contents: history,
@@ -27,22 +27,22 @@ export const getChatResponse = async (history: Message[]): Promise<string> => {
     // The API returns the whole history, so we get the last message which is the assistant's new response.
     const lastMessage = responseData.contents[responseData.contents.length - 1];
 
-    if (lastMessage && lastMessage.role === 'assistant' && lastMessage.parts.length > 0) {
-      let part = lastMessage.parts[0];
-      return (part as ChatMessagePart).text;
-    }
-
-    throw new Error('Invalid response format from API');
+    return lastMessage;
 
   } catch (error) {
     console.error('Failed to fetch chat response:', error);
+    let msg = 'An unknown error occurred. Please try again.';
     if (error instanceof Error) {
-      // Add a more descriptive message for the likely CORS issue.
-      if (error.message.includes('Failed to fetch')) {
-        return "Sorry, I could not connect to the health assistant. This might be a network issue or a server configuration problem.";
-      }
-      return `Sorry, I encountered an error: ${error.message}. Please try again later.`;
+      msg = `Sorry, I encountered an error: ${error.message}. Please try again later.`;
     }
-    return 'An unknown error occurred. Please try again.';
+    return {
+
+      id: 500,
+      role: 'assistant',
+
+      parts: [{
+        text: msg
+      }]
+    }
   }
 };

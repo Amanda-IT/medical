@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { ChatMessagePart, Message } from "../types/chat";
+import { MessagePart, Message } from "../types/chat";
 import { Person, Android } from '@mui/icons-material';
 
 interface MessageBubbleProps {
@@ -28,7 +28,12 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         ) : (
           <Android style={{ marginRight: '8px', color: '#52c41a' }} />
         )}
-        <Typography variant="body1">{(message.parts[0] as ChatMessagePart).text}</Typography>
+
+        {message.parts.map(part => (
+          part.text !== undefined ?
+            (<Typography variant="body1">{part.text}</Typography>)
+            : <></>
+        ))}
       </Box>
     </Box>
   );
