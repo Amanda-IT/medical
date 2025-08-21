@@ -1,3 +1,11 @@
+# Add a profile to your AWS credentials file
+Copy and paste the following text in your AWS credentials file (~/.aws/credentials). 
+
+[133286763062_ps-PPCAWS-Hackathon] # change to [default]
+aws_access_key_id=
+aws_secret_access_key=
+aws_session_token=
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

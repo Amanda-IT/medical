@@ -12,7 +12,7 @@ export const getChatResponse = async (history: Message[]): Promise<Message> => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        'x-authorization': `Bearer ${localStorage.getItem('token')}`
       },
       body: JSON.stringify(payload),
     });
