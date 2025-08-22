@@ -1,0 +1,5 @@
+Table name: explorers-memberhub-appointment
+
+Partition key: user_id (String)
+
+Sort key: appointment_id (String)
