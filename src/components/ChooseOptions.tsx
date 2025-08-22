@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card,CardContent,Box,Typography,Chip } from '@mui/material';
 
 interface ChooseOptionsProps {
   options: any[];
@@ -8,20 +9,37 @@ interface ChooseOptionsProps {
 
 const ChooseOptions: React.FC<ChooseOptionsProps> = ({ options, onChoose, isLoading }) => {
   return (
-    <div className="p-4 bg-gray-700/50 rounded-xl transition-all duration-300">
-      <p className="text-center text-gray-300 mb-3 font-medium">The AI wants you to Choose one:</p>
-      <div className="flex justify-center flex-wrap gap-3">
-        {options.map((option, index) => (
-          <button
-            key={option}
-            onClick={() => onChoose(index +1)}
-            disabled={isLoading}
-            className="px-6 py-2 bg-purple-600 text-white font-semibold rounded-full shadow-md transition-all transform hover:scale-105 hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75 disabled:bg-gray-500 disabled:cursor-not-allowed"
-          >
-            {JSON.stringify( option)}
-          </button>
+    <div>
+      <Typography sx={{ pl: 2,mx:2 }}>Which one would you like to choose?</Typography>
+      <Box sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)", // 3列
+            gap: 2,
+            width: "90%",
+            mx: "auto",
+          }}
+        >
+          {options.map((option, index) => (
+          <Card sx={{ width: 300, minWidth: 300, mr: 2, borderRadius: 2 }}>
+            <CardContent>
+              {
+                Object.entries(option).map(([key, item]) => (
+                  <Box key={index} mb={1}>
+                    <Typography variant="caption" color="text.secondary" gutterBottom>
+                      {key}
+                    </Typography>
+                    <Typography variant="body2">{item as string}</Typography>
+                  </Box>
+                ))
+              }
+              <Box mt={2} display="flex" justifyContent="flex-end">
+                <Chip label="Make an appointment" size="small" color="primary" onClick={() => onChoose(index +1)} />
+              </Box>
+            </CardContent>
+          </Card>
+          
         ))}
-      </div>
+      </Box>
     </div>
   );
 }

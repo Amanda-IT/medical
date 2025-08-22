@@ -19,6 +19,7 @@ export const getLoginResponse = async (payload: any) => {
     const responseData = await response.json();
 
     localStorage.setItem('token', responseData.access_token);
+    localStorage.setItem("currentUser", payload.userName); 
     return true;
 
   } catch (error) {

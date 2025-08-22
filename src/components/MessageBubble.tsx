@@ -26,12 +26,20 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
         {message.role === 'user' ? (
           <Person style={{ marginRight: '8px', color: '#1890ff' }} />
         ) : (
-          <Android style={{ marginRight: '8px', color: '#52c41a' }} />
+          <Android style={{ marginRight: '8px', color: '#52c41a' }} /> 
         )}
 
         {message.parts.map(part => (
-          part.text !== undefined ?
-            (<Typography variant="body1">{part.text}</Typography>)
+          part.text !== undefined?
+            <div
+              style={{
+                whiteSpace: "pre-line", 
+                lineHeight: "1.6", 
+                fontFamily: "inherit" 
+              }}
+            >
+              {part.text}
+            </div>
             : <></>
         ))}
       </Box>

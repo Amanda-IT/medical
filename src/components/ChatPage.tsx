@@ -22,7 +22,6 @@ const ChatPage: React.FC = () => {
 
   const [activeToolCall, setActiveToolCall] = useState<FunctionCall | null>(null);
 
-
   // 自动滚动到底部
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,7 +36,6 @@ const ChatPage: React.FC = () => {
     setMessages([initialMessage])
     setIsLoading(false);
   }
-
 
   const handleSendMessage = async (userInput: string) => {
     if (!userInput.trim()) return;
@@ -61,7 +59,6 @@ const ChatPage: React.FC = () => {
         setActiveToolCall(part.functionCall)
       }
     });
-
 
     setMessages((prevMessages) => [...prevMessages, assistantMessage]);
     setIsLoading(false);
@@ -90,7 +87,6 @@ const ChatPage: React.FC = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Header />
-
       {/* 对话区域 */}
       <Box
         sx={{

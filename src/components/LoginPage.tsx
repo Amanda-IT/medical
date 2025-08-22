@@ -22,11 +22,12 @@ const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
 
   const onSubmit = async (data: LoginFormInputs) => {
+    
     var result = await getLoginResponse(data);
-
     if (result) {
       console.log("navigate")
-      navigate('/chat'); // 跳转到聊天页面
+      
+      navigate('/chat');
     } else {
       console.error("login fail");
       alert('Oops, looks like the userName or password is incorrect. Try again!');
