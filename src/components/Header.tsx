@@ -23,7 +23,7 @@ const Header: React.FC = () => {
     >
       <Avatar sx={{ bgcolor: "white", color: "primary.main" }}>🤖</Avatar>
       <Typography variant="h6" sx={{ flex: 1 }}>
-        AI Health Assistant
+        Intelligent Healthcare Allocation
       </Typography>
       <Typography variant="body2">
         Welcome, {username}! 
