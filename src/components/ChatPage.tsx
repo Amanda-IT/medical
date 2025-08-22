@@ -65,8 +65,11 @@ const ChatPage: React.FC = () => {
 
   };
 
-  const handleToolResponse = useCallback(async (userSelection: number) => {
+  const handleToolResponse = useCallback(async (data: any) => {
     if (!activeToolCall) return;
+
+    let {option, num} = data;
+    const [firstKey, firstValue] = Object.entries(option)[0];
 
     const userMessage: Message = {
       id: 1,
@@ -74,14 +77,14 @@ const ChatPage: React.FC = () => {
       parts: [{
         functionResponse: {
           name: activeToolCall?.name,
-          response: `user choose the ${userSelection}`
+          response: `user choose the option ${num}`
         }
       }],
     }
 
     setMessages(prev => [...prev, userMessage]);
 
-    handleSendMessage(`I choose ${userSelection}`)
+    handleSendMessage(`I choose option ${num}, ${firstValue}`)
   }, [activeToolCall]);
 
   return (

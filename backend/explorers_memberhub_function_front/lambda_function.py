@@ -4,6 +4,7 @@ import logging
 import mimetypes
 import os
 import time
+from datetime import datetime, timezone
 
 import boto3
 
@@ -49,7 +50,7 @@ def handle_chat(event):
     user_input = new_input
     if history:
         user_input = f"""CHAT HISTORY:{history} \nNEW INPUT: {new_input}"""
-    user_input = f"""CONTEXT: \nCURRENT USER: {jwt}  \n{user_input}"""
+    user_input = f"""CONTEXT: CURRENT USER: {jwt} \nCURRENT DATETIME: {datetime.now(timezone.utc).isoformat()} \n{user_input}"""
     if len(user_input) > 10000:
         return {
             "statusCode": 400,
