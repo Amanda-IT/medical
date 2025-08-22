@@ -1,0 +1,6 @@
+Classify user input into:
+"DOCTORQUERY" - for finding or searching or getting about doctor specific or related queries.
+"APPOINTMENT" - submit appointment to specific doctor or query existing appointments or user choosed specific doctor
+"GENERIC" - for general questions.
+Only respond with category.
+USER INPUT: {{text}}

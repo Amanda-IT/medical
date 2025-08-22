@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: Doctor Appointment API
+  version: 1.0.0
+  description: API to book and view doctor appointments by user.
+
+servers:
+  - url: https://rruaealyapf6huhzsnxhz4bi5q0azqkq.lambda-url.us-east-1.on.aws
+paths:
+  /book:
+    post:
+      summary: Book a new appointment
+      description: Create a doctor appointment for a specific user.
+      operationId: addAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - patient_name
+                - doctor_name
+                - appointment_time
+              properties:
+                user_id:
+                  type: string
+                  example: user123
+                patient_name:
+                  type: string
+                  example: John Doe
+                doctor_name:
+                  type: string
+                  example: Dr. Smith
+                appointment_time:
+                  type: string
+                  format: date-time
+                  example: "2025-08-15T10:30:00Z"
+      responses:
+        '201':
+          description: Appointment successfully booked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  appointment_id:
+                    type: string
+        '400':
+          description: Missing required fields
+        '500':
+          description: Internal server error
+
+  /appointments:
+    get:
+      summary: Get all appointments for a user
+      description: Retrieve all appointments for a given user ID.
+      operationId: getAppointments
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: string
+          description: The ID of the user to retrieve appointments for.
+          example: user123
+      responses:
+        '200':
+          description: List of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: string
+                    appointment_id:
+                      type: string
+                    patient_name:
+                      type: string
+                    doctor_name:
+                      type: string
+                    appointment_time:
+                      type: string
+                      format: date-time
+                    created_at:
+                      type: string
+                      format: date-time
+        '400':
+          description: Missing user_id query parameter
+        '500':
+          description: Internal server error

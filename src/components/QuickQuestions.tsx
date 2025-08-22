@@ -7,11 +7,12 @@ interface QuickQuestionsProps {
 const QuickQuestions: React.FC<QuickQuestionsProps> = ({ onSend }) => {
   const questions = [
     "Show my appointments",
-    "65 years,有高血压病史，最近3天出现胸闷，气短症状，请推荐几位上海专家医生",
+    "65-year-old with hypertension, experiencing chest tightness and shortness of breath. Please recommend some expert doctors.",
   ];
 
   return (
     <Box sx={{ padding: "0 16px 12px", display: "flex", flexWrap: "wrap", gap: 1 }}>
+      examples: 
       {questions.map((text, index) => (
         <Button
           key={index}

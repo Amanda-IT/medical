@@ -1,14 +1,14 @@
 import { Box, Typography, Avatar,Button } from "@mui/material";
-import AutorenewIcon from '@mui/icons-material/Autorenew';
+import React, { useEffect, useState } from "react";
 
 const Header: React.FC = () => {
- 
-  const handleStartOver = () => {
-    const confirmReset = window.confirm('Are you sure you want to clear the chat history?');
-    if (confirmReset) {
-      // clearMessages();
+  const [username, setUsername] = useState("");
+  useEffect(() => {
+    const savedUser = localStorage.getItem("currentUser");
+    if (savedUser) {
+      setUsername(savedUser);
     }
-  };
+  }, []);
 
   return (
     <Box
@@ -26,10 +26,7 @@ const Header: React.FC = () => {
         AI Health Assistant
       </Typography>
       <Typography variant="body2">
-          Admin 
-          <Button onClick={handleStartOver} variant="contained" sx={{marginLeft: "1rem",}} color="success" startIcon={<AutorenewIcon />}>
-            start over
-          </Button>
+        Welcome, {username}! 
       </Typography>
     </Box>
   );
