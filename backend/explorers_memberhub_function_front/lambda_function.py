@@ -50,7 +50,7 @@ def handle_chat(event):
     if history:
         user_input = f"""CHAT HISTORY:{history} \nNEW INPUT: {new_input}"""
     user_input = f"""CONTEXT: \nCURRENT USER: {jwt}  \n{user_input}"""
-    if len(user_input) > 4000:
+    if len(user_input) > 10000:
         return {
             "statusCode": 400,
             "headers": {
