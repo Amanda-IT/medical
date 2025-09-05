@@ -20,6 +20,11 @@ const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([initialMessage]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [speakingMessageIndex, setSpeakingMessageIndex] = useState<number | null>(null);
+  const [isSpeechPaused, setIsSpeechPaused] = useState(false);
+
+
+
   const [activeToolCall, setActiveToolCall] = useState<FunctionCall | null>(null);
 
   // 自动滚动到底部
@@ -36,6 +41,41 @@ const ChatPage: React.FC = () => {
     setMessages([initialMessage])
     setIsLoading(false);
   }
+
+
+
+  const handlePlayPauseSpeech = useCallback((index: number, text: string) => {
+    const speech = window.speechSynthesis;
+
+    if (speakingMessageIndex === index && speech.speaking) {
+      if (speech.paused) {
+        speech.resume();
+        setIsSpeechPaused(false);
+      } else {
+        speech.pause();
+        setIsSpeechPaused(true);
+      }
+    } else {
+      speech.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-CN'; // Set to Chinese for example prompts, will fallback if not available
+
+      utterance.onstart = () => {
+        setSpeakingMessageIndex(index);
+        setIsSpeechPaused(false);
+      };
+      utterance.onend = () => {
+        setSpeakingMessageIndex(null);
+        setIsSpeechPaused(false);
+      };
+      utterance.onerror = (e) => {
+        console.error('Speech Synthesis Error:', e);
+        setSpeakingMessageIndex(null);
+        setIsSpeechPaused(false);
+      };
+      speech.speak(utterance);
+    }
+  }, [speakingMessageIndex]);
 
   const handleSendMessage = async (userInput: string) => {
     if (!userInput.trim()) return;
@@ -68,7 +108,7 @@ const ChatPage: React.FC = () => {
   const handleToolResponse = useCallback(async (data: any) => {
     if (!activeToolCall) return;
 
-    let {option, num} = data;
+    let { option, num } = data;
     const [firstKey, firstValue] = Object.entries(option)[0];
 
     const userMessage: Message = {
@@ -99,13 +139,15 @@ const ChatPage: React.FC = () => {
           bgcolor: "background.default",
         }}
       >
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+        {messages.map((msg, index) => (
+          <MessageBubble key={msg.id} message={msg}
+            index={index}
+            onPlayPauseSpeech={handlePlayPauseSpeech}
+            isSpeaking={speakingMessageIndex === index && !isSpeechPaused}
+          />
         ))}
 
         {isLoading && <TypingIndicator />}
-        <div ref={messagesEndRef} />
-
         <div ref={messagesEndRef} />
       </Box>
 
@@ -128,7 +170,9 @@ const ChatPage: React.FC = () => {
         }
       </div>
 
-      <ChatInput onSend={handleSendMessage} />
+      <ChatInput onSend={handleSendMessage}
+        isLoading={isLoading}
+      />
     </Box>
   );
 };
