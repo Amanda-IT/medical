@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Box, TextField, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MicIcon from '@mui/icons-material/Mic';
+import { SpeechToSpeech } from '../lib/speechToSpeech';
 
 // For TypeScript to recognize the Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -40,9 +41,21 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
 
   const [isRecording, setIsRecording] = useState(false);
   const [voiceTranscript, setVoiceTranscript] = useState('');
-  const [isSpeechApiSupported, setIsSpeechApiSupported] = useState(true);
+  const [isSpeechApiSupported, setIsSpeechApiSupported] = useState(false);
 
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const inputRef = useRef(inputText);
+
+  // 每次更新 state 时，也更新 ref
+  useEffect(() => {
+    inputRef.current = inputText;
+  }, [inputText]);
+
+  const speechToSpeech = new SpeechToSpeech((data: string) => {
+    console.log(data);
+    setInputText(inputText + " " + data);
+  });
+
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -53,7 +66,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
       recognition.lang = 'en-US';
 
       recognition.onresult = (event) => {
-        let interimTranscript = '';
+        let interimTranscript = ''; // 临时
         let finalTranscript = '';
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           const transcriptPart = event.results[i][0].transcript;
@@ -65,7 +78,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
         }
 
         setVoiceTranscript(finalTranscript + interimTranscript);
-        setInputText( finalTranscript + interimTranscript)
+        // 这个代码块是闭包, 只能拿到初始化useEffect 时的 inputText ""
+        setInputText(inputRef.current + "" + finalTranscript)
       };
 
       recognition.onerror = (event) => {
@@ -101,7 +115,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
     }
   };
 
-
   const handleToggleListening = useCallback(() => {
     if (!recognitionRef.current) return;
 
@@ -114,6 +127,16 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
     setIsRecording(!isRecording);
   }, [isRecording]);
 
+  const handleToggleListeningByApi = useCallback(() => {
+
+    if (isRecording) {
+      speechToSpeech.stopStreaming()
+    } else {
+      speechToSpeech.startStreaming()
+    }
+    setIsRecording(!isRecording);
+  }, [isRecording]);
+
 
   return (
     <Box sx={{ display: "flex", padding: "12px", bgcolor: "background.paper" }}>
@@ -122,7 +145,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
         onKeyPress={handleKeyPress}
-        placeholder={isRecording ? 'Listening...' : "Please describe your symptoms..."}
+        placeholder={"Please describe your symptoms..."}
         variant="outlined"
         size="small"
         sx={{
@@ -132,10 +155,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
           },
         }}
       />
-      {isSpeechApiSupported && (
+      {(
         <button
           type="button"
-          onClick={handleToggleListening}
+          onClick={isSpeechApiSupported ? handleToggleListeningByApi : handleToggleListening}
           disabled={isLoading}
           className={`flex-shrink-0 p-3 rounded-full transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${isRecording
             ? 'bg-red-500 text-white animate-pulse'
