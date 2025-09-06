@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Box, TextField, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MicIcon from '@mui/icons-material/Mic';
+import StopIcon from '@mui/icons-material/Stop';
 import { SpeechToSpeech } from '../lib/speechToSpeech';
 
 // For TypeScript to recognize the Web Speech API
@@ -167,7 +168,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
           style={{ width: "40px" }}
           aria-label={isRecording ? 'Stop listening' : 'Start listening'}
         >
-          <MicIcon />
+          {!isRecording ? <MicIcon /> : <StopIcon />}
         </button>
       )}
 

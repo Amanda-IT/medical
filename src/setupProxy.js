@@ -35,19 +35,19 @@ module.exports = function (app) {
     next();
   })
 
-  // 注意, socket 授权比http麻烦, 这里未添加授权.
-  app.use('/socket.io', createProxyMiddleware({
-    target: "ws://localhost:3003", // WebSocket 服务地址
-    changeOrigin: true,
-    pathRewrite: (path, req) => {
-      if (path == "/ws") {
-        return path;
-      } else
-        return "/socket.io" + path;
-    }, // 不修改路径
-    ws: true, // 👈 必须加上
-    logLevel: "debug",
-  }))
+  // // 注意, socket 授权比http麻烦, 这里未添加授权.
+  // app.use('/socket.io', createProxyMiddleware({
+  //   target: "ws://localhost:3003", // WebSocket 服务地址
+  //   changeOrigin: true,
+  //   pathRewrite: (path, req) => {
+  //     if (path == "/ws") {
+  //       return path;
+  //     } else
+  //       return "/socket.io" + path;
+  //   }, // 不修改路径
+  //   ws: true, // 👈 必须加上
+  //   logLevel: "debug",
+  // }))
 
   // req.body is null if no this step
   app.use(bodyParser.json());
