@@ -156,21 +156,24 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
           },
         }}
       />
-      {(
-        <button
-          type="button"
-          onClick={isSpeechApiSupported ? handleToggleListeningByApi : handleToggleListening}
-          disabled={isLoading}
-          className={`flex-shrink-0 p-3 rounded-full transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed ${isRecording
-            ? 'bg-red-500 text-white animate-pulse'
-            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-            }`}
-          style={{ width: "40px" }}
-          aria-label={isRecording ? 'Stop listening' : 'Start listening'}
-        >
-          {!isRecording ? <MicIcon /> : <StopIcon />}
-        </button>
-      )}
+            <IconButton
+        onClick={isSpeechApiSupported ? handleToggleListeningByApi : handleToggleListening}
+        disabled={isLoading}
+        className={`pulse-animation ${isRecording ? 'pulseButton' : ''} `}
+        sx={{
+          marginLeft: "10px",
+          bgcolor: isRecording ? 'error.main' : 'background.default',
+          '&:hover': { bgcolor: isRecording ? 'error.dark' : 'action.hover' },
+          borderRadius: '50%',
+          p: 1,
+          boxShadow: isRecording ? '0 0 0 4px rgba(255,0,0,0.3)' : 'none',
+        }}
+      >
+        {isRecording 
+          ? <StopIcon sx={{ color: 'error.contrastText' }} /> 
+          : <MicIcon sx={{ color: 'text.primary' }} />
+        }
+      </IconButton>
 
       <IconButton
         disabled={isLoading || !inputText.trim()}

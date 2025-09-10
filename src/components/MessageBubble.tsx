@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
 import { MessagePart, Message } from "../types/chat";
 import { Person, Android } from '@mui/icons-material';
 import PauseIcon from '@mui/icons-material/Pause';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+
 
 interface MessageBubbleProps {
   message: Message;
@@ -94,7 +95,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, index, onPlayPau
           <>
             {
               part.text !== undefined &&
-              <div
+              <span
                 style={{
                   whiteSpace: "pre-line",
                   lineHeight: "1.6",
@@ -102,18 +103,17 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, index, onPlayPau
                 }}
               >
                 {part.text}
-              </div>
+              </span>
             }
             {
-              message.role === 'assistant' &&
-              <button
+              part.text !== undefined && message.role === 'assistant' && <IconButton
                 onClick={() => handlePlayPauseSpeech(index, part.text as string)}
-                className="self-center p-1.5 text-gray-400 rounded-full hover:bg-gray-200 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                aria-label={isSpeaking ? 'Pause speech' : 'Play speech'}
-                style={{ float: "right" }}
+                sx={{
+                  marginLeft: "10px",
+                }}
               >
-                {isSpeaking ? <PauseIcon className="w-5 h-5" /> : <PlayCircleIcon className="w-5 h-5" />}
-              </button>
+                {isSpeaking ? <PauseIcon className="w-5 h-5" /> : <VolumeUpIcon className="w-5 h-5" />}
+              </IconButton>
             }
           </>
         ))}
