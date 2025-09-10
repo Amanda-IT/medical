@@ -11,6 +11,7 @@ import TypingIndicator from "./TypingIndicator"
 
 const ChatPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [enableRecording, setEnableRecording] = useState<boolean>(true);
 
   const initialMessage: Message = {
     id: 1,
@@ -142,7 +143,7 @@ const ChatPage: React.FC = () => {
         {messages.map((msg, index) => (
           <MessageBubble key={msg.id} message={msg}
             index={index}
-            onPlayPauseSpeech={handlePlayPauseSpeech}
+            onPlayPauseSpeech={(isSpeak) => { setEnableRecording(!isSpeak); }}
             isSpeaking={speakingMessageIndex === index && !isSpeechPaused}
           />
         ))}
@@ -172,6 +173,7 @@ const ChatPage: React.FC = () => {
 
       <ChatInput onSend={handleSendMessage}
         isLoading={isLoading}
+        enableRecording={enableRecording}
       />
     </Box>
   );

@@ -9,7 +9,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 interface MessageBubbleProps {
   message: Message;
   index: number;
-  onPlayPauseSpeech: (index: number, text: string) => void;
+  onPlayPauseSpeech: (isSpeaking: boolean) => void;
   isSpeaking: boolean;
 }
 
@@ -42,8 +42,9 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, index, onPlayPau
     return newAudio;
   };
 
-  const handlePlayPauseSpeech = (index: number, text: string) => {
+  const handlePlayPauseSpeech = async (index: number, text: string) => {
     isSpeaking ? handlePause() : handlePlay(text);
+    onPlayPauseSpeech?.(!isSpeaking)
   }
 
   const handlePlay = async (text: string) => {

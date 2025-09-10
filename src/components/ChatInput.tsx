@@ -35,9 +35,10 @@ declare global {
 interface ChatInputProps {
   onSend: (text: string) => void;
   isLoading: boolean;
+  enableRecording: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading, enableRecording }) => {
   const [inputText, setInputText] = useState<string>("");
 
   const [isRecording, setIsRecording] = useState(false);
@@ -51,6 +52,12 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
   useEffect(() => {
     inputRef.current = inputText;
   }, [inputText]);
+
+  useEffect(() => {
+    if (!enableRecording)
+      if (isRecording)
+        handleToggleListening();
+  }, [enableRecording]);
 
   const speechToSpeech = new SpeechToSpeech((data: string) => {
     console.log(data);
@@ -106,13 +113,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      if (isRecording) {
-        recognitionRef.current?.stop();
-        setIsRecording(false);
-      }
-
-      onSend(inputText);
-      setInputText("");
+      send();
     }
   };
 
@@ -128,6 +129,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
     setIsRecording(!isRecording);
   }, [isRecording]);
 
+
   const handleToggleListeningByApi = useCallback(() => {
 
     if (isRecording) {
@@ -138,6 +140,14 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
     setIsRecording(!isRecording);
   }, [isRecording]);
 
+  const send = () => {
+    onSend(inputText);
+    setInputText("");
+
+    if (isRecording) {
+      setIsRecording(!isRecording)
+    }
+  }
 
   return (
     <Box sx={{ display: "flex", padding: "12px", bgcolor: "background.paper" }}>
@@ -156,7 +166,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
           },
         }}
       />
-            <IconButton
+      <IconButton
         onClick={isSpeechApiSupported ? handleToggleListeningByApi : handleToggleListening}
         disabled={isLoading}
         className={`pulse-animation ${isRecording ? 'pulseButton' : ''} `}
@@ -169,18 +179,15 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
           boxShadow: isRecording ? '0 0 0 4px rgba(255,0,0,0.3)' : 'none',
         }}
       >
-        {isRecording 
-          ? <StopIcon sx={{ color: 'error.contrastText' }} /> 
+        {isRecording
+          ? <StopIcon sx={{ color: 'error.contrastText' }} />
           : <MicIcon sx={{ color: 'text.primary' }} />
         }
       </IconButton>
 
       <IconButton
         disabled={isLoading || !inputText.trim()}
-        onClick={() => {
-          onSend(inputText);
-          setInputText("");
-        }}
+        onClick={send}
         sx={{ marginLeft: "8px", color: "primary.main" }}
       >
         <SendIcon />
