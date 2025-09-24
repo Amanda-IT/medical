@@ -165,6 +165,7 @@ const ChatPage: React.FC = () => {
               options={activeToolCall.args.options}
               onChoose={handleToolResponse}
               isLoading={isLoading}
+              tip={activeToolCall.args.tip}
             />
           )
 

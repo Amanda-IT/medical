@@ -5,9 +5,10 @@ interface ChooseOptionsProps {
   options: any[];
   onChoose: (option: any) => void;
   isLoading: boolean;
+  tip: any;
 }
 
-const ChooseOptions: React.FC<ChooseOptionsProps> = ({ options, onChoose, isLoading }) => {
+const ChooseOptions: React.FC<ChooseOptionsProps> = ({ options, onChoose, isLoading, tip }) => {
   return (
     <div>
       <Typography sx={{ pl: 2, mx: 2 }}>Which one would you like to choose?</Typography>
@@ -40,6 +41,16 @@ const ChooseOptions: React.FC<ChooseOptionsProps> = ({ options, onChoose, isLoad
 
         ))}
       </Box>
+      <Box component="section" sx={{
+        p: 2, width: "95%",
+        mx: "auto",
+      }} >
+        <Typography variant="caption" color="text.secondary" gutterBottom>
+          Doctor Selection' s Advice
+        </Typography>
+        <Typography variant="body2">{tip}</Typography>
+      </Box>
+
     </div>
   );
 }

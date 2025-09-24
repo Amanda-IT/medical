@@ -12,6 +12,7 @@ export interface FunctionCall {
   name: string;
   args: {
     options: any[];
+    tip: any;
   };
 }
 
